@@ -6,7 +6,6 @@ import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Getter
@@ -15,17 +14,18 @@ import java.util.List;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProcessInstanceExecutionLog {
+public class Activity {
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
-    private String logId;
-    private String processInstanceReference;
-    private String parentProcessInstanceReference;
+    private String activityId;
+    private String activityInstanceReference;
+    private String subprocessInstanceReference;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime processTimeStamp;
+    private LocalDateTime activityTimeStamp;
     @Enumerated(EnumType.STRING)
     private ActivityStatus activityStatus;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Activity> activities;
+    @Enumerated(EnumType.STRING)
+    private ActivityType activityType;
+
 }
