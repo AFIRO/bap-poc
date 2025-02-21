@@ -22,6 +22,7 @@ public class ProcessInstanceExecutionLog {
     private String logId;
     private String processInstanceReference;
     private String parentProcessInstanceReference;
+    private String initiatorReference;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime processTimeStamp;
     @Enumerated(EnumType.STRING)

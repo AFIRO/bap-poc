@@ -15,6 +15,7 @@ public class LogMapper {
                 .logId(data.getLogId())
                 .activityStatus(data.getActivityStatus())
                 .parentProcessInstanceReference(data.getParentProcessInstanceReference())
+                .initiatorReference(data.getInitiatorReference())
                 .processInstanceReference(data.getProcessInstanceReference())
                 .processTimeStamp(data.getProcessTimeStamp())
                 .activities(data.getActivities().stream().map(activityMapper::toActivityOutputDto).toList())
