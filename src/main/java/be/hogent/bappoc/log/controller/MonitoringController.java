@@ -1,4 +1,4 @@
-package be.hogent.bappoc.controller;
+package be.hogent.bappoc.log.controller;
 
 import be.hogent.bappoc.log.dto.ProcessInstanceInputDto;
 import be.hogent.bappoc.log.dto.ProcessInstanceOutputDto;
@@ -27,7 +27,7 @@ public class MonitoringController {
         } catch (Exception e){
             return ResponseEntity.badRequest().build();
         }
-        }
+    }
     @GetMapping("/ByProcessInstance/{id}")
     public ResponseEntity<ProcessInstanceOutputDto> getByProcessInstanceReference(@PathVariable("id") String processInstanceReference){
         log.info("Get by process instance reference {} called", processInstanceReference);

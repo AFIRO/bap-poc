@@ -2,7 +2,7 @@ package be.hogent.bappoc.log.service;
 
 import be.hogent.bappoc.log.dto.ProcessInstanceInputDto;
 import be.hogent.bappoc.log.dto.ProcessInstanceOutputDto;
-import be.hogent.bappoc.repository.LogRepository;
+import be.hogent.bappoc.log.repository.LogRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;

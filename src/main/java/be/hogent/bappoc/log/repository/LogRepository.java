@@ -1,4 +1,4 @@
-package be.hogent.bappoc.repository;
+package be.hogent.bappoc.log.repository;
 
 import be.hogent.bappoc.log.entity.ProcessInstanceExecutionLog;
 import org.springframework.data.jpa.repository.JpaRepository;
