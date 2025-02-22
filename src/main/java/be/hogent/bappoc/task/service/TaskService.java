@@ -8,7 +8,7 @@ import be.hogent.bappoc.task.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
-
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -21,7 +21,11 @@ public class TaskService {
     public List<TaskOutputDto> getAll() {
         log.info("Getting data from repo");
         List<Task> data = repository.findAll();
-        return data.stream().map(mapper::toOutputDto).toList();
+        return data
+                .stream()
+                .map(mapper::toOutputDto)
+                .sorted(Comparator.comparing(TaskOutputDto::getStartTimeStamp))
+                .toList();
     }
 
     public TaskOutputDto getByTaskInstanceReference(String taskInstanceReference) {
@@ -42,6 +46,19 @@ public class TaskService {
         return mapper.toOutputDto(data);
     }
 
+    public void persistNewTask(Task createdTask ) {
+        repository.save(createdTask);
+    }
+
     public void processTaskData(TaskInputDto data) {
+        if (!repository.existsByTaskInstanceReference(data.getTaskInstanceReference())) {
+            log.error("Task with Instance Reference {} does not exist.", data.getTaskInstanceReference());
+            throw new IllegalArgumentException("Task does not exist.");
+        }
+
+        log.info("Updating data for task {}",data.getTaskInstanceReference());
+        Task dataToUpdate = repository.getTaskByTaskInstanceReference(data.getTaskInstanceReference()).orElseThrow();
+        dataToUpdate = mapper.updateData(dataToUpdate,data);
+        repository.save(dataToUpdate);
     }
 }

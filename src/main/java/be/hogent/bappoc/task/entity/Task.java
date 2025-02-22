@@ -21,6 +21,7 @@ public class Task {
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
     private String taskId;
     private String taskInstanceReference;
+    private String taskReference;
     private String executorReference;
     private String processInstanceReference;
     private String initiatorReference;

@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 public class ActivityInputDto {
     private String activityInstanceReference;
     private String subprocessInstanceReference;
+    private String activityReference;
     private LocalDateTime activityTimeStamp;
     private ActivityStatus activityStatus;
     private ActivityType activityType;

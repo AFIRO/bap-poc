@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface LogRepository extends JpaRepository<ProcessInstanceExecutionLog, String> {
     Optional<ProcessInstanceExecutionLog> findByProcessInstanceReference(String processInstanceReference);
     Optional<ProcessInstanceExecutionLog> findByInitiatorReference(String initiatorReference);
+    boolean existsByProcessInstanceReference(String processInstanceReference);
 }
