@@ -7,8 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import static org.apache.logging.log4j.util.Strings.isNotEmpty;
 
 @RestController
 @RequiredArgsConstructor
@@ -45,11 +45,10 @@ public class LogController {
     }
 
     @PostMapping("/")
-    public ResponseEntity postMonitoring(@RequestBody ProcessInstanceInputDto data) {
-        log.info("Monitoring posted for process instance {}", data.getProcessInstanceReference());
+    public ResponseEntity<ProcessInstanceOutputDto> postMonitoring(@RequestBody ProcessInstanceInputDto data) {
+        log.info("Monitoring posted for process instance {}", isNotEmpty(data.getProcessInstanceReference())? data.getProcessInstanceReference() : "NEW");
         try {
-            service.processMonitoringData(data);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok().body(service.processMonitoringData(data));
         } catch (Exception e){
             return ResponseEntity.badRequest().build();
         }

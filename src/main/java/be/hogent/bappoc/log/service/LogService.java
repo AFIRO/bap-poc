@@ -3,6 +3,7 @@ package be.hogent.bappoc.log.service;
 import be.hogent.bappoc.log.dto.ProcessInstanceInputDto;
 import be.hogent.bappoc.log.dto.ProcessInstanceOutputDto;
 import be.hogent.bappoc.log.entity.Activity;
+import be.hogent.bappoc.log.entity.ActivityStatus;
 import be.hogent.bappoc.log.entity.ProcessInstanceExecutionLog;
 import be.hogent.bappoc.log.mapper.ActivityMapper;
 import be.hogent.bappoc.log.mapper.LogMapper;
@@ -43,15 +44,15 @@ public class LogService {
         ProcessInstanceExecutionLog data = repository.findByInitiatorReference(initiatorReference).orElseThrow();
         return logMapper.toOutputDto(data);
     }
-    public void processMonitoringData(ProcessInstanceInputDto data) {
+    public ProcessInstanceOutputDto processMonitoringData(ProcessInstanceInputDto data) {
         if (isNotEmpty(data.getProcessInstanceReference())){
-            updateProcessExecutionLog(data);
+            return updateProcessExecutionLog(data);
         } else {
-            createNewProcessExecutionLog(data);
+            return createNewProcessExecutionLog(data);
         }
         
     }
-    private void createNewProcessExecutionLog(ProcessInstanceInputDto data) {
+    private ProcessInstanceOutputDto createNewProcessExecutionLog(ProcessInstanceInputDto data) {
         log.info("Creating new Execution Log.");
         if (data.getActivities().size() != 1) {
             log.error("Data contained more than 1 initial activity.");
@@ -59,27 +60,40 @@ public class LogService {
         ProcessInstanceExecutionLog toPersist = logMapper.toEntity(data);
         log.info("Persisting Execution Log for Process Instance {}",toPersist.getProcessInstanceReference());
         repository.save(toPersist);
-        generateTaskBasedOnActivity(toPersist.getProcessInstanceReference(),toPersist.getActivities().get(0).getActivityReference());
+        generateTaskBasedOnActivity(toPersist.getProcessInstanceReference(),toPersist.getActivities().get(0));
+        return logMapper.toOutputDto(toPersist);
     }
-    private void updateProcessExecutionLog(ProcessInstanceInputDto data) {
-        log.info("Updating Execution Log with Process Instance Reference {}.",data.getProcessInstanceReference());
+    private ProcessInstanceOutputDto updateProcessExecutionLog(ProcessInstanceInputDto data) {
+        log.info("Updating Execution Log with Process Instance Reference {}.", data.getProcessInstanceReference());
 
         if (data.getActivities().size() != 1) {
             log.error("Data contained more than one activity.");
-            throw new IllegalArgumentException("A process may not be updated with more than one activity at a time.");}
+            throw new IllegalArgumentException("A process may not be updated with more than one activity at a time.");
+        }
 
-        if (!repository.existsByProcessInstanceReference(data.getProcessInstanceReference())){
+        if (!repository.existsByProcessInstanceReference(data.getProcessInstanceReference())) {
             log.error("Process with Process Instance Reference {} does not exist.", data.getProcessInstanceReference());
-            throw new IllegalArgumentException("Process to update does not exist.");}
+            throw new IllegalArgumentException("Process to update does not exist.");
+        }
 
         ProcessInstanceExecutionLog logToUpdate = repository.findByProcessInstanceReference(data.getProcessInstanceReference()).orElseThrow();
+        if (logToUpdate.getActivityStatus() != ActivityStatus.START) {
+            log.error("Process {} has already concluded. You can no longer alter it.", data.getProcessInstanceReference());
+            throw new IllegalArgumentException("A process may not be updated if it has already concluded.");
+        }
+
+        if (data.getActivityStatus().equals(ActivityStatus.START)){
         Activity activityToAdd = activityMapper.toEntity(data.getActivities().get(0));
         logToUpdate.getActivities().add(activityToAdd);
+        generateTaskBasedOnActivity(logToUpdate.getProcessInstanceReference(), activityToAdd);
+        } else {
+            logToUpdate.setActivityStatus(data.getActivityStatus());
+            logToUpdate.setProcessTimeStamp(data.getProcessTimeStamp());
+        }
         repository.save(logToUpdate);
-
-        generateTaskBasedOnActivity(logToUpdate.getProcessInstanceReference(), activityToAdd.getActivityReference());
+        return logMapper.toOutputDto(logToUpdate);
     }
-    private void generateTaskBasedOnActivity(String processInstanceReference, String activityReference) {
-        engine.generateTaskBasedOnActivity(processInstanceReference,activityReference);
+    private void generateTaskBasedOnActivity(String processInstanceReference, Activity activity) {
+        engine.generateTaskBasedOnActivity(processInstanceReference,activity);
     }
 }

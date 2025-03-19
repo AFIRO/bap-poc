@@ -18,6 +18,7 @@ public class ActivityMapper {
                 .activityReference(data.getActivityReference())
                 .activityStatus(data.getActivityStatus())
                 .activityType(data.getActivityType())
+                .executorReference(data.getExecutorReference())
                 .build();
     }
     public Activity toEntity(ActivityInputDto data){
@@ -27,6 +28,7 @@ public class ActivityMapper {
                 .activityTimeStamp(data.getActivityTimeStamp())
                 .activityStatus(data.getActivityStatus())
                 .activityType(data.getActivityType())
+                .executorReference(data.getExecutorReference())
                 .build();
     }
 }

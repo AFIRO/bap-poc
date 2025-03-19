@@ -21,6 +21,7 @@ public class ActivityOutputDto {
     private String activityReference;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime activityTimeStamp;
+    private String executorReference;
     private ActivityStatus activityStatus;
     private ActivityType activityType;
 }

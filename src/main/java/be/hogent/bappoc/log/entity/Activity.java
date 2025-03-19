@@ -22,6 +22,7 @@ public class Activity {
     private String activityInstanceReference;
     private String subprocessInstanceReference;
     private String activityReference;
+    private String executorReference;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime activityTimeStamp;
     @Enumerated(EnumType.STRING)

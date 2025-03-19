@@ -1,5 +1,7 @@
 package be.hogent.bappoc.shared;
 
+import be.hogent.bappoc.log.entity.Activity;
+import be.hogent.bappoc.log.entity.ActivityStatus;
 import be.hogent.bappoc.task.entity.Task;
 import be.hogent.bappoc.task.entity.TaskStatus;
 import be.hogent.bappoc.task.service.TaskService;
@@ -16,12 +18,13 @@ import java.util.UUID;
 public class ExecutionEngine {
     private final TaskService taskService;
     private final EmployeeRepository employeeRepository;
-    public void generateTaskBasedOnActivity(String processInstanceReference, String activityReference) {
-        if (ActivityToTaskMapping.containsActivityReference(activityReference)) {
-            log.info("Generating task {} based on activity {} provided.", ActivityToTaskMapping.getTaskReference(activityReference), activityReference);
+    public void generateTaskBasedOnActivity(String processInstanceReference, Activity activity) {
+        if (activity.getActivityStatus().equals(ActivityStatus.START) &&
+                ActivityToTaskMapping.containsActivityReference(activity.getActivityReference())) {
+            log.info("Generating task {} based on activity {} provided.", ActivityToTaskMapping.getTaskReference(activity.getActivityReference()), activity.getActivityReference());
             Task createdTask = Task.builder()
                     .taskInstanceReference(UUID.randomUUID().toString())
-                    .taskReference(ActivityToTaskMapping.getTaskReference(activityReference))
+                    .taskReference(ActivityToTaskMapping.getTaskReference(activity.getActivityReference()))
                     .executorReference(employeeRepository.findFirstByOrderByNumberOfTasksAsc().getId())
                     .processInstanceReference(processInstanceReference)
                     .startTimeStamp(LocalDateTime.now())
@@ -29,7 +32,7 @@ public class ExecutionEngine {
                     .build();
             taskService.persistNewTask(createdTask);
         } else {
-            log.info("No new task to generate based on activity provided {}.", activityReference);
+            log.info("No new task to generate based on activity provided {}.", activity.getActivityReference());
         }
     }
 }

@@ -18,6 +18,7 @@ public class ActivityInputDto {
     private String subprocessInstanceReference;
     private String activityReference;
     private LocalDateTime activityTimeStamp;
+    private String executorReference;
     private ActivityStatus activityStatus;
     private ActivityType activityType;
 }
