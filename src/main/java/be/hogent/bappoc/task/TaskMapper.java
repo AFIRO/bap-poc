@@ -13,6 +13,7 @@ public class TaskMapper {
                 .taskInstanceReference(data.getTaskInstanceReference())
                 .processInstanceReference(data.getProcessInstanceReference())
                 .taskReference(data.getTaskReference())
+                .initiatorReference(data.getInitiatorReference())
                 .executorReference(data.getExecutorReference())
                 .startTimeStamp(data.getStartTimeStamp())
                 .stopTimeStamp(data.getStopTimeStamp())

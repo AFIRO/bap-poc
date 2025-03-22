@@ -45,12 +45,12 @@ public class LogController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<ProcessInstanceOutputDto> postMonitoring(@RequestBody ProcessInstanceInputDto data) {
+    public ResponseEntity postMonitoring(@RequestBody ProcessInstanceInputDto data) {
         log.info("Monitoring posted for process instance {}", isNotEmpty(data.getProcessInstanceReference())? data.getProcessInstanceReference() : "NEW");
         try {
             return ResponseEntity.ok().body(service.processMonitoringData(data));
         } catch (Exception e){
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
 
     }

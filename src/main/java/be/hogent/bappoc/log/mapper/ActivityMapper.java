@@ -11,7 +11,6 @@ import java.util.UUID;
 public class ActivityMapper {
     public ActivityOutputDto toActivityOutputDto(Activity data){
         return ActivityOutputDto.builder()
-                .activityId(data.getActivityId())
                 .activityInstanceReference(data.getActivityInstanceReference())
                 .activityTimeStamp(data.getActivityTimeStamp())
                 .subprocessInstanceReference(data.getSubprocessInstanceReference())
@@ -26,6 +25,7 @@ public class ActivityMapper {
                 .activityInstanceReference(UUID.randomUUID().toString())
                 .activityReference(data.getActivityReference())
                 .activityTimeStamp(data.getActivityTimeStamp())
+                .subprocessInstanceReference(data.getSubprocessInstanceReference())
                 .activityStatus(data.getActivityStatus())
                 .activityType(data.getActivityType())
                 .executorReference(data.getExecutorReference())

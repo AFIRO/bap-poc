@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ActivityOutputDto {
-    private String activityId;
     private String activityInstanceReference;
     private String subprocessInstanceReference;
     private String activityReference;

@@ -14,7 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProcessInstanceOutputDto {
-    private String logId;
     private String processInstanceReference;
     private String parentProcessInstanceReference;
     private String initiatorReference;

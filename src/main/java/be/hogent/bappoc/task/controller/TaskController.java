@@ -1,14 +1,11 @@
 package be.hogent.bappoc.task.controller;
 
-import be.hogent.bappoc.log.dto.ProcessInstanceInputDto;
-import be.hogent.bappoc.log.dto.ProcessInstanceOutputDto;
 import be.hogent.bappoc.task.dto.TaskInputDto;
 import be.hogent.bappoc.task.dto.TaskOutputDto;
 import be.hogent.bappoc.task.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -67,7 +64,7 @@ public class TaskController {
             service.processTaskData(data);
             return ResponseEntity.ok().build();
         } catch (Exception e){
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
 
     }

@@ -18,7 +18,6 @@ public class LogMapper {
 
     public ProcessInstanceOutputDto toOutputDto(ProcessInstanceExecutionLog data){
         return ProcessInstanceOutputDto.builder()
-                .logId(data.getLogId())
                 .activityStatus(data.getActivityStatus())
                 .parentProcessInstanceReference(data.getParentProcessInstanceReference())
                 .initiatorReference(data.getInitiatorReference())
@@ -37,6 +36,7 @@ public class LogMapper {
                 .processInstanceReference(UUID.randomUUID().toString())
                 .initiatorReference(data.getInitiatorReference())
                 .processTimeStamp(data.getProcessTimeStamp())
+                .parentProcessInstanceReference(data.getParentProcessInstanceReference())
                 .activityStatus(data.getActivityStatus())
                 .activities(List.of(activityMapper.toEntity(data.getActivities().get(0))))
                 .build();

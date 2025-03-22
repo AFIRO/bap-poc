@@ -60,13 +60,13 @@ public class LogService {
         ProcessInstanceExecutionLog toPersist = logMapper.toEntity(data);
         log.info("Persisting Execution Log for Process Instance {}",toPersist.getProcessInstanceReference());
         repository.save(toPersist);
-        generateTaskBasedOnActivity(toPersist.getProcessInstanceReference(),toPersist.getActivities().get(0));
+        generateTaskBasedOnActivity(toPersist,toPersist.getActivities().get(0));
         return logMapper.toOutputDto(toPersist);
     }
     private ProcessInstanceOutputDto updateProcessExecutionLog(ProcessInstanceInputDto data) {
         log.info("Updating Execution Log with Process Instance Reference {}.", data.getProcessInstanceReference());
 
-        if (data.getActivities().size() != 1) {
+        if (data.getActivityStatus() == ActivityStatus.START && data.getActivities().size() != 1) {
             log.error("Data contained more than one activity.");
             throw new IllegalArgumentException("A process may not be updated with more than one activity at a time.");
         }
@@ -85,7 +85,7 @@ public class LogService {
         if (data.getActivityStatus().equals(ActivityStatus.START)){
         Activity activityToAdd = activityMapper.toEntity(data.getActivities().get(0));
         logToUpdate.getActivities().add(activityToAdd);
-        generateTaskBasedOnActivity(logToUpdate.getProcessInstanceReference(), activityToAdd);
+        generateTaskBasedOnActivity(logToUpdate, activityToAdd);
         } else {
             logToUpdate.setActivityStatus(data.getActivityStatus());
             logToUpdate.setProcessTimeStamp(data.getProcessTimeStamp());
@@ -93,7 +93,7 @@ public class LogService {
         repository.save(logToUpdate);
         return logMapper.toOutputDto(logToUpdate);
     }
-    private void generateTaskBasedOnActivity(String processInstanceReference, Activity activity) {
-        engine.generateTaskBasedOnActivity(processInstanceReference,activity);
+    private void generateTaskBasedOnActivity(ProcessInstanceExecutionLog executionLog, Activity newActivity) {
+        engine.generateTaskBasedOnActivity(executionLog,newActivity);
     }
 }
