@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 public class TaskMapper {
     public TaskOutputDto toOutputDto(Task data){
         return TaskOutputDto.builder()
-                .taskId(data.getTaskId())
                 .taskInstanceReference(data.getTaskInstanceReference())
                 .processInstanceReference(data.getProcessInstanceReference())
                 .taskReference(data.getTaskReference())

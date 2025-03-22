@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TaskOutputDto {
-    private String taskId;
     private String taskInstanceReference;
     private String executorReference;
     private String processInstanceReference;
