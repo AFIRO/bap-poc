@@ -19,4 +19,5 @@ public class Employee {
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
     private String id;
     private int numberOfTasks;
+    private int maxAllowedTasks;
 }

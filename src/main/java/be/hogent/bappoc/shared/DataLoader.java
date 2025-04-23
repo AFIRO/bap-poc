@@ -16,7 +16,7 @@ public class DataLoader {
     private void seedEmployees() {
         int NUMBER_OF_EMPLOYEES_TO_SEED = 3;
         for (int counter = 0; counter < NUMBER_OF_EMPLOYEES_TO_SEED; counter++) {
-            employeeRepository.save(Employee.builder().numberOfTasks(0).build());
+            employeeRepository.save(Employee.builder().numberOfTasks(0).maxAllowedTasks(8).build());
         }
     }
 }
