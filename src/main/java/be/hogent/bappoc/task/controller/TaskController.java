@@ -38,7 +38,7 @@ public class TaskController {
     }
 
     @GetMapping("/ByExecutor/{id}")
-    public ResponseEntity<TaskOutputDto> getByExecutorReference(@PathVariable("id") String executorReference){
+    public ResponseEntity<List<TaskOutputDto>> getByExecutorReference(@PathVariable("id") String executorReference){
         log.info("Get by executor reference {} called", executorReference);
         try {
             return ResponseEntity.ok().body(service.getByExecutorReference(executorReference));

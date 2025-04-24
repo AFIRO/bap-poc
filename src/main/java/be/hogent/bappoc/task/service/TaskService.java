@@ -38,10 +38,14 @@ public class TaskService {
         return mapper.toOutputDto(data);
     }
 
-    public TaskOutputDto getByExecutorReference(String executorReference) {
+    public List<TaskOutputDto> getByExecutorReference(String executorReference) {
         log.info("Getting data from repo");
-        Task data = taskRepository.getTaskByExecutorReference(executorReference).orElseThrow();
-        return mapper.toOutputDto(data);
+        List<Task> data = taskRepository.getTasksByExecutorReference(executorReference);
+        return data
+                .stream()
+                .map(mapper::toOutputDto)
+                .sorted(Comparator.comparing(TaskOutputDto::getStartTimeStamp))
+                .toList();
     }
 
     public TaskOutputDto getByInitiatorReference(String initiatorReference) {
