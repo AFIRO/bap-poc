@@ -33,7 +33,7 @@ public class ExecutionEngine {
                         .executorReference("UNASSIGNED")
                         .processInstanceReference(executionLog.getProcessInstanceReference())
                         .initiatorReference(executionLog.getInitiatorReference())
-                        .startTimeStamp(LocalDateTime.now())
+                        .startTimeStamp(LocalDateTime.now().minusHours(2))
                         .status(TaskStatus.ONGOING)
                         .build();
                 taskService.persistNewTask(createdTask);
@@ -45,7 +45,7 @@ public class ExecutionEngine {
                         .executorReference(assignableExecutor.getId())
                         .processInstanceReference(executionLog.getProcessInstanceReference())
                         .initiatorReference(executionLog.getInitiatorReference())
-                        .startTimeStamp(LocalDateTime.now())
+                        .startTimeStamp(LocalDateTime.now().minusHours(2))
                         .status(TaskStatus.ONGOING)
                         .build();
                 taskService.persistNewTask(createdTask);

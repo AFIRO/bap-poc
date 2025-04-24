@@ -83,7 +83,17 @@ public class LogService {
         }
 
         if (data.getActivityStatus().equals(ActivityStatus.START)){
+
         Activity activityToAdd = activityMapper.toEntity(data.getActivities().get(0));
+
+        if (activityToAdd.getActivityStatus() != ActivityStatus.START){
+            logToUpdate.getActivities()
+                    .stream()
+                    .filter(activity -> activity.getActivityReference().equals(data.getActivities().get(0).getActivityReference()))
+                    .findFirst()
+                    .ifPresent(potentialPrecedingActivity -> activityToAdd.setActivityInstanceReference(potentialPrecedingActivity.getActivityInstanceReference()));
+        }
+
         logToUpdate.getActivities().add(activityToAdd);
         generateTaskBasedOnActivity(logToUpdate, activityToAdd);
         } else {
