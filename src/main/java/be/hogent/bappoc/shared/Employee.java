@@ -18,6 +18,7 @@ public class Employee {
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
     private String id;
+    private String name;
     private int numberOfTasks;
     private int maxAllowedTasks;
 }

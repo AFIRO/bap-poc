@@ -38,7 +38,12 @@ public class ExecutionEngine {
                         .build();
                 taskService.persistNewTask(createdTask);
             } else {
-                Employee assignableExecutor = executors.get(0);
+                Employee assignableExecutor = executors
+                        .stream()
+                        .filter(employee -> employee.getName().equals(activity.getExecutorReference()))
+                        .findFirst()
+                        .orElse(executors.get(0));
+
                 Task createdTask = Task.builder()
                         .taskInstanceReference(UUID.randomUUID().toString())
                         .taskReference(ActivityToTaskMapping.getTaskReference(activity.getActivityReference()))

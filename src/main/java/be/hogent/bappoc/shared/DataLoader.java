@@ -14,9 +14,8 @@ public class DataLoader {
         seedEmployees();
     }
     private void seedEmployees() {
-        int NUMBER_OF_EMPLOYEES_TO_SEED = 3;
-        for (int counter = 0; counter < NUMBER_OF_EMPLOYEES_TO_SEED; counter++) {
-            employeeRepository.save(Employee.builder().numberOfTasks(0).maxAllowedTasks(8).build());
-        }
+        employeeRepository.save(Employee.builder().name("Balthasar Boma").numberOfTasks(0).maxAllowedTasks(8).build());
+        employeeRepository.save(Employee.builder().name("Dimitri De Tremmerie").numberOfTasks(0).maxAllowedTasks(8).build());
+        employeeRepository.save(Employee.builder().name("Fernand Costermans").numberOfTasks(0).maxAllowedTasks(8).build());
     }
 }
