@@ -1,0 +1,58 @@
+{
+	"id": "0d437760-65e7-42b7-8c4a-19083a0a8d23",
+	"values": [
+		{
+			"key": "ongoing_task",
+			"value": "d2743046-2308-4a15-89c2-40e4727c72f1",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "boma_process_instance",
+			"value": "bb02b36b-3990-4750-a571-0d2eef12408a",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "task_url",
+			"value": "http://localhost:8080/task/",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "monitoring_url",
+			"value": "http://localhost:8080/monitoring/",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "subprocess_instance_reference",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "executor",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "BOMA",
+			"value": "\"Balthasar Boma\"",
+			"type": "default"
+		},
+		{
+			"key": "DDT",
+			"value": "Dimitri De Tremmerie",
+			"type": "default"
+		},
+		{
+			"key": "FERNAND",
+			"value": "Fernand Costermans",
+			"type": "default"
+		}
+	],
+	"name": "Globals",
+	"_postman_variable_scope": "globals",
+	"_postman_exported_at": "2025-04-24T15:36:28.082Z",
+	"_postman_exported_using": "Postman/11.37.5"
+}

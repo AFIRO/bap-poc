@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Task List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+        .container {
+            text-align: center;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 200px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #taskList {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .task-card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+        .task-card:hover {
+            transform: translateY(-2px);
+        }
+        .task-card p {
+            margin: 5px 0;
+            font-size: 14px;
+            text-align: left;
+        }
+        .task-card p strong {
+            color: #333;
+        }
+        #error {
+            color: red;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .filter-container {
+            margin: 10px 0;
+            text-align: left;
+            display: inline-block;
+        }
+        .filter-container label {
+            font-size: 14px;
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Takenoverzicht</h1>
+        <input type="text" id="employeeUUID" placeholder="Enter Employee UUID">
+        <button onclick="fetchTasks()">Get Tasks</button>
+        <div class="filter-container">
+            <input type="checkbox" id="ongoingFilter" onchange="renderTasks()">
+            <label for="ongoingFilter">Show only ONGOING tasks</label>
+        </div>
+        <div id="error"></div>
+        <ul id="taskList"></ul>
+    </div>
+
+    <script>
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        var taskData = []; // Store fetched tasks globally
+
+        function filledCell(cell) {
+            return cell !== '' && cell != null;
+        }
+
+        function loadFileData(filename) {
+            if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+                try {
+                    var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                    var firstSheetName = workbook.SheetNames[0];
+                    var worksheet = workbook.Sheets[firstSheetName];
+                    var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                    var filteredData = jsonData.filter(row => row.some(filledCell));
+                    var headerRowIndex = filteredData.findIndex((row, index) =>
+                        row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                    );
+                    if (headerRowIndex === -1 || headerRowIndex > 25) {
+                        headerRowIndex = 0;
+                    }
+                    var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
+                    csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                    return csv;
+                } catch (e) {
+                    console.error(e);
+                    return "";
+                }
+            }
+            return gk_fileData[filename] || "";
+        }
+
+        function renderTasks() {
+            const taskList = document.getElementById('taskList');
+            const ongoingFilter = document.getElementById('ongoingFilter').checked;
+
+            // Clear current task list
+            taskList.innerHTML = '';
+
+            // Filter tasks based on checkbox
+            const filteredTasks = ongoingFilter
+                ? taskData.filter(task => task.status === 'ONGOING')
+                : taskData;
+
+            // Render tasks
+            if (filteredTasks.length > 0) {
+                filteredTasks.forEach(task => {
+                    const taskCard = document.createElement('li');
+                    taskCard.className = 'task-card';
+                    if (task.status === 'ONGOING') {
+                    taskCard.innerHTML = `
+                        <p><strong>Taak:</strong> ${task.taskReference || 'Geen Beschrijving'}</p>
+                        <p><strong>Klant:</strong> ${task.initiatorReference || 'Klant onbekend'}</p>
+                        <p><strong>Taak toegewezen op:</strong> ${task.startTimeStamp || 'Onbekend'}</p>
+                        <p><strong>Huidige status:</strong> ${task.status || 'Onbekend'}</p>
+                    `;
+                    } else {
+                        taskCard.innerHTML = `
+                        <p><strong>Taak:</strong> ${task.taskReference || 'Geen Beschrijving'}</p>
+                        <p><strong>Klant:</strong> ${task.initiatorReference || 'Klant onbekend'}</p>
+                        <p><strong>Taak toegewezen op:</strong> ${task.startTimeStamp || 'Onbekend'}</p>
+                        <p><strong>Huidige status:</strong> ${task.status || 'Onbekend'}</p>
+                        <p><strong>Taak beeindigd op:</strong> ${task.stopTimeStamp || 'Onbekend'}</p>
+                    `;   
+                    }
+                    taskList.appendChild(taskCard);
+                });
+            } else {
+                taskList.innerHTML = '<li class="task-card">No tasks found</li>';
+            }
+        }
+
+        async function fetchTasks() {
+            const uuid = document.getElementById('employeeUUID').value.trim();
+            const taskList = document.getElementById('taskList');
+            const errorDiv = document.getElementById('error');
+
+            // Clear previous content
+            taskList.innerHTML = '';
+            errorDiv.innerHTML = '';
+            taskData = []; // Reset task data
+
+            if (!uuid) {
+                errorDiv.textContent = 'Please enter a valid UUID';
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:8080/task/ByExecutor/${uuid}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch tasks');
+                }
+
+                taskData = await response.json();
+                console.log(taskData);
+                renderTasks(); // Render tasks after fetching
+            } catch (error) {
+                errorDiv.textContent = 'Error: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>

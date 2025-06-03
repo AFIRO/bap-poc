@@ -1,0 +1,33 @@
+{
+	"info": {
+		"_postman_id": "7380255b-36a2-4201-a334-d6009fd872bb",
+		"name": "Task Data",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16838648"
+	},
+	"item": [
+		{
+			"name": "Complete ongoing task",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"taskInstanceReference\": \"{{ongoing_task}}\",\r\n    \"stopTimeStamp\": \"2025-03-22T15:55:10.399Z\",\r\n    \"status\": \"SUCCESS\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{task_url}}",
+					"host": [
+						"{{task_url}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
